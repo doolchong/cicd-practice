@@ -63,7 +63,6 @@ jobs:
           key: ${{ secrets.EC2_KEY }} # 키페어 값
           script_stop: true
           script: |
-            ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
             ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
             IMAGE_TAG: ${{ github.sha }}
             AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
