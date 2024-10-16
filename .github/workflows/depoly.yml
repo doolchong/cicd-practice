@@ -57,16 +57,16 @@ jobs:
     steps:
       - name: SSH(원격 접속)로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.1.0
+        env:
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         with:
           host: ${{ secrets.EC2_HOST }} # 원격 서버의 주석
           username: ${{ secrets.EC2_USERNAME }} # 인스턴스를 시작하는 데 사용되는 AMI에 정의된 사용자 이름
           key: ${{ secrets.EC2_KEY }} # 키페어 값
           script_stop: true
           script: |
-            ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-            IMAGE_TAG: ${{ github.sha }}
-            AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-            
             cd /home/ubuntu/cicd-practice
             docker stop SAL || true
             docker rm SAL || true
