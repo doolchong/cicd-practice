@@ -42,7 +42,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: latest
         run: |
           docker tag docker.io/library/cicd-practice:0.0.1-SNAPSHOT $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -59,7 +59,7 @@ jobs:
         uses: appleboy/ssh-action@v1.1.0
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: latest
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         with:
           host: ${{ secrets.EC2_HOST }} # 원격 서버의 주석
@@ -72,7 +72,7 @@ jobs:
             docker rm SAL || true
             
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
-            docker pull $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$ECR_REPOSITORY:latest
+            docker pull $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
           
             docker run -m 1g -d --name SAL -p 8080:8080 \
               $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG \
