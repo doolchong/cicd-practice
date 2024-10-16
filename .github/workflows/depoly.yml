@@ -74,7 +74,7 @@ jobs:
             
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
             docker pull $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
-            aws ecr batch-delete-image --repository-name ECR_REPOSITORY --image $IMAGE_TAG=latest --region ap-northeast-2
+            aws ecr batch-delete-image --repository-name ECR_REPOSITORY --image-ids imageTag=$IMAGE_TAG --region ap-northeast-2
           
             docker run -m 1g -d --name SAL -p 8080:8080 \
               $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG \
